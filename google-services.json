@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "956490826711",
+    "project_id": "mariekat-a7cbd",
+    "storage_bucket": "mariekat-a7cbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956490826711:android:5716d627c35d4138a64192",
+        "android_client_info": {
+          "package_name": "com.mariekat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxgAwIK7NCy--ZwQ9EhLKmhxVaXZy-Jlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
