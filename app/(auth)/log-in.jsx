@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { Text, View, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import { Link } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../firebase';
 
 export default function Login() {
   const [fontsLoaded] = useFonts({
@@ -11,9 +13,52 @@ export default function Login() {
     'Poppins-Regular': require('../../assets/fonts/Poppins-Regular.ttf'),
   });
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   if (!fontsLoaded) {
     return null; // or a loading spinner
   }
+
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      Alert.alert('User logged in successfully');
+      console.log('User logged in:', user);
+    } catch (error) {
+      const errorMessage = error.message;
+      Alert.alert('Error:', errorMessage);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      Alert.alert('User logged in with Google successfully');
+      console.log('User logged in:', user);
+    } catch (error) {
+      const errorMessage = error.message;
+      Alert.alert('Error:', errorMessage);
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    if (!email) {
+      Alert.alert('Please enter your email to reset password');
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      Alert.alert('Password reset email sent');
+    } catch (error) {
+      const errorMessage = error.message;
+      Alert.alert('Error:', errorMessage);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -25,23 +70,28 @@ export default function Login() {
         <View style={styles.inputWrapper}>
           <FontAwesome name="user" size={24} color="gray" />
           <TextInput
-            placeholder="Username or Email"
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
             style={styles.input}
           />
         </View>
+
         <View style={styles.inputWrapper}>
           <FontAwesome name="lock" size={24} color="gray" />
           <TextInput
             placeholder="Password"
             secureTextEntry
+            value={password}
+            onChangeText={setPassword}
             style={styles.input}
           />
           <TouchableOpacity style={styles.eyeIcon}>
             <Ionicons name="eye" size={24} color="gray" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-        <TouchableOpacity style={styles.loginButton}>
+        <Text style={styles.forgotPassword} onPress={handlePasswordReset}>Forgot Password?</Text>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginButtonText}>Log in</Text>
         </TouchableOpacity>
 
@@ -51,15 +101,15 @@ export default function Login() {
           <View style={styles.separatorLine} />
         </View>
 
-        <TouchableOpacity style={styles.googleButton}>
+        <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn}>
           <FontAwesome name="google" size={24} color="gray" style={styles.googleIcon} />
           <Text style={styles.googleButtonText}>Google</Text>
         </TouchableOpacity>
       </View>
 
       <Text style={styles.signupText}>
-        Don't you have an account?{' '}
-        <Link href="/sign-up" style={styles.signupLink}>Sign up</Link>
+        Don't have an account?{' '}
+        <Link href="/(auth)/sign-up" style={styles.signupLink}>Sign up</Link>
       </Text>
     </View>
   );
@@ -78,7 +128,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontFamily: 'Poppings-SemiBold',
+    fontFamily: 'Poppins-SemiBold',
     marginBottom: 24,
   },
   inputContainer: {
