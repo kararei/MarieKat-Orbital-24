@@ -1,47 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
-import { Link } from 'expo-router';
-import { useFonts } from 'expo-font';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { useAuth } from '../hooks';
-
-export default function NewProfile() {
-  const [fontsLoaded] = useFonts({
-    'Poppins-SemiBold': require('../../assets/fonts/Poppins-SemiBold.ttf'),
-    'Poppins-Regular': require('../../assets/fonts/Poppins-Regular.ttf'),
-  });
-
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+  
+export default function CreateProfile() {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [cityCountry, setCityCountry] = useState('');
   const [bio, setBio] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
-
-  const { user } = useAuth(); // Custom hook to get the authenticated user
-
-  if (!fontsLoaded) {
-    return null; // or a loading spinner
-  }
-
-  const handleEnter = async () => {
-    try {
-      // Save user profile to Firestore under the user's document
-      await setDoc(doc(db, 'users', user.uid, 'profiles', name), {
-        name: name,
-        age: age,
-        cityCountry: cityCountry,
-        bio: bio,
-        socialMedia: socialMedia,
-      });
-
-      Alert.alert('Profile created successfully');
-      console.log('Profile created:', { name, age, cityCountry, bio, socialMedia });
-    } catch (error) {
-      const errorMessage = error.message;
-      Alert.alert('Error:', errorMessage);
-    }
+  
+  const handleEnter = () => {
+    const profileData = { name, age, cityCountry, bio, socialMedia };
+    console.log(profileData);
   };
 
   return (
@@ -89,7 +60,7 @@ export default function NewProfile() {
           />
         </View>
         <View style={styles.inputWrapper}>
-          <FontAwesome name="social-instagram" size={24} color="gray" />
+          <FontAwesome name="instagram" size={24} color="gray" />
           <TextInput
             placeholder="Social Media (optional)"
             value={socialMedia}
