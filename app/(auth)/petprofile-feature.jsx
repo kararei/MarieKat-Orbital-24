@@ -1,20 +1,42 @@
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 
-export default function CreateProfile() {
+const firebaseConfig = {
+  apiKey: "AIzaSyDzZEvYjyr3jA4eAoz2UCyG0xAYIt3o0fw",
+  authDomain: "mariekat-a7cbd.firebaseapp.com",
+  projectId: "mariekat-a7cbd",
+  storageBucket: "mariekat-a7cbd.appspot.com",
+  messagingSenderId: "956490826711",
+  appId: "1:956490826711:web:deb1d1e869934e20a64192",
+  measurementId: "G-L3YMD3WLND"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+  
+export default function CreatePetProfile() {
   const [name, setName] = useState('');
   const [petType, setPetType] = useState('');
   const [age, setAge] = useState('');
   const [bio, setBio] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
 
-  const handleEnter = () => {
+  const handleEnter = async () => {
     const petProfileData = { name, petType, age, bio, socialMedia };
-    console.log(petProfileData);
-    // Implement Firestore or other logic to save the pet profile data
+
+    try {
+      const docRef = await addDoc(collection(db, 'pets'), petProfileData);
+      console.log("Pet profile document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding pet profile document: ", e);
+    }
   };
+
 
   return (
     <View style={styles.container}>

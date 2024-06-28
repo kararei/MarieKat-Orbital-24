@@ -1,7 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDzZEvYjyr3jA4eAoz2UCyG0xAYIt3o0fw",
+  authDomain: "mariekat-a7cbd.firebaseapp.com",
+  projectId: "mariekat-a7cbd",
+  storageBucket: "mariekat-a7cbd.appspot.com",
+  messagingSenderId: "956490826711",
+  appId: "1:956490826711:web:deb1d1e869934e20a64192",
+  measurementId: "G-L3YMD3WLND"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
   
 export default function CreateProfile() {
   const [name, setName] = useState('');
@@ -10,9 +26,15 @@ export default function CreateProfile() {
   const [bio, setBio] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
   
-  const handleEnter = () => {
+  const handleEnter = async () => {
     const profileData = { name, age, cityCountry, bio, socialMedia };
-    console.log(profileData);
+    
+    try {
+      const docRef = await addDoc(collection(db, 'users'), profileData);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
