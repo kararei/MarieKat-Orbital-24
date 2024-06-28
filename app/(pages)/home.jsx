@@ -12,3 +12,15 @@ export default function Home() {
     if (!fontsLoaded) {
         return null; // or a loading spinner or something
       }
+
+      return (
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.title}>MarieKat</Text>
+            <TouchableOpacity style={styles.swapPetButton}>
+              <Text style={styles.swapPetText}>swap pet</Text>
+              <Ionicons name="caret-down" size={16} color="black" />
+            </TouchableOpacity>
+          </View>
+
+          
