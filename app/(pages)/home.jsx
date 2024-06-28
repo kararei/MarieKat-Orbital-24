@@ -23,4 +23,30 @@ export default function Home() {
             </TouchableOpacity>
           </View>
 
-          
+          <ScrollView contentContainerStyle={styles.content}>
+            <View style={styles.section}>
+            <TouchableOpacity style={styles.sectionHeader}>
+              <FontAwesome name="calendar" size={24} color="black" />
+              <Text style={styles.sectionTitle}>Upcoming Events</Text>
+              <Ionicons name="chevron-forward" size={24} color="black" />
+            </TouchableOpacity>
+          <View style={styles.sectionContent}>
+          {/* Placeholder for upcoming events */}
+            <Text style={styles.placeholderText}>No upcoming events scheduled.</Text>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.sectionHeader}>
+            <FontAwesome name="calendar" size={24} color="black" />
+            <Text style={styles.sectionTitle}>Community Messages</Text>
+            <Ionicons name="chevron-forward" size={24} color="black" />
+          </TouchableOpacity>
+          <View style={styles.sectionContent}>
+          {/* Placeholder for new community messages */}
+            <Text style={styles.placeholderText}>No new messages.</Text>
+          </View>
+        </View>
+      </ScrollView>
+
+      
