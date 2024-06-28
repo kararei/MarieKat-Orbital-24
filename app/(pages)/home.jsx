@@ -66,3 +66,78 @@ export default function Home() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff9f2',
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 16,
+      backgroundColor: '#fff9f2',
+      borderBottomWidth: 1,
+      borderBottomColor: '#e0e0e0',
+    },
+    title: {
+      fontSize: 32,
+      fontFamily: 'Poppins-SemiBold',
+    },
+    swapPetButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#fff9f2',
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+    },
+    swapPetText: {
+      color: 'black',
+      fontFamily: 'Poppins-SemiBold',
+      marginRight: 4,
+    },
+    content: {
+      padding: 16,
+    },
+    section: {
+      marginBottom: 16,
+      borderRadius: 8,
+      backgroundColor: '#f8d2e2',
+      padding: 16,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    sectionTitle: {
+      marginLeft: 8,
+      fontSize: 20,
+      fontFamily: 'Poppins-SemiBold',
+      flex: 1,
+    },
+    sectionContent: {
+      padding: 16,
+      backgroundColor: '#fff9f2',
+      borderRadius: 8,
+    },
+    placeholderText: {
+      fontSize: 16,
+      fontFamily: 'Poppins-Regular',
+      color: '#757575',
+    },
+    bottomNav: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      paddingVertical: 16,
+      backgroundColor: '#fff9f2',
+      borderTopWidth: 1,
+      borderTopColor: '#e0e0e0',
+    },
+    navItem: {
+      alignItems: 'center',
+    },
+  });
+  
