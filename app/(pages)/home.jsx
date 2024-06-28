@@ -49,4 +49,20 @@ export default function Home() {
         </View>
       </ScrollView>
 
-      
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="home" size={24} color="red" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="calendar" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="settings" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="person" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
