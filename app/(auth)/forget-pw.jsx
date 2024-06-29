@@ -33,7 +33,7 @@ export default function ForgotPassword() {
           Alert.alert('Error:', errorMessage);
         }
       };
-      
+
       return (
         <View style={styles.container}>
           <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
@@ -63,5 +63,60 @@ export default function ForgotPassword() {
         </View>
       );
     }
+
+    const styles = StyleSheet.create({
+        container: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        logo: {
+          width: 96,
+          height: 96,
+          marginBottom: 16,
+        },
+        title: {
+          fontSize: 32,
+          fontFamily: 'Poppins-SemiBold',
+          marginBottom: 24,
+        },
+        inputContainer: {
+          width: '100%',
+          maxWidth: 400,
+          marginBottom: 16,
+        },
+        inputWrapper: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: '#e0e0e0',
+          borderRadius: 50,
+          padding: 12,
+          marginBottom: 16,
+        },
+        input: {
+          flex: 1,
+          marginLeft: 8,
+          fontFamily: 'Poppins-Regular',
+        },
+        resetButton: {
+          backgroundColor: '#800000',
+          borderRadius: 50,
+          paddingVertical: 12,
+          marginBottom: 16,
+        },
+        resetButtonText: {
+          color: '#fff',
+          textAlign: 'center',
+          fontWeight: 'bold',
+          fontFamily: 'Poppins-SemiBold',
+        },
+        backToLoginText: {
+          color: '#757575',
+        },
+        backToLoginLink: {
+          color: '#ff8c00',
+        },
+      });
+      
     
     
