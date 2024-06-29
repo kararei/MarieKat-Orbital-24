@@ -58,7 +58,7 @@ export default function ForgotPassword() {
     
           <Text style={styles.backToLoginText}>
             Remembered your password?{' '}
-            <Link href="/(auth)/login" style={styles.backToLoginLink}>Log in</Link>
+            <Link href="/(auth)/log-in" style={styles.backToLoginLink}>Log in</Link>
           </Text>
         </View>
       );
@@ -69,6 +69,7 @@ export default function ForgotPassword() {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
+          padding: 16,
         },
         logo: {
           width: 96,
@@ -102,7 +103,7 @@ export default function ForgotPassword() {
           backgroundColor: '#800000',
           borderRadius: 50,
           paddingVertical: 12,
-          marginBottom: 16,
+          marginBottom: 12,
         },
         resetButtonText: {
           color: '#fff',
