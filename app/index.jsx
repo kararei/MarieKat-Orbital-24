@@ -12,6 +12,7 @@ export default function App() {
       <Link href="/(auth)/personalprofile-feature" style={{ color: 'orange'}}>Profile</Link>
       <Link href="/(auth)/petprofile-feature" style={{ color: 'orange'}}>Pet profile</Link>
       <Link href="/(pages)/home" style={{ color: 'blue'}}>Profile</Link>
+      <Link href="/(pages)/calendar-page" style={{ color: 'blue'}}>Calendar page</Link>
     </View>
   );
 }
