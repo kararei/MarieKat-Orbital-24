@@ -33,4 +33,35 @@ export default function ForgotPassword() {
           Alert.alert('Error:', errorMessage);
         }
       };
+      
+      return (
+        <View style={styles.container}>
+          <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+          <Text style={styles.title}>MarieKat</Text>
+          <StatusBar style="auto" />
+    
+          <View style={styles.inputContainer}>
+            <View style={styles.inputWrapper}>
+              <FontAwesome name="user" size={24} color="gray" />
+              <TextInput
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                style={styles.input}
+              />
+            </View>
+            
+            <TouchableOpacity style={styles.resetButton} onPress={handlePasswordReset}>
+              <Text style={styles.resetButtonText}>Reset Password</Text>
+            </TouchableOpacity>
+          </View>
+    
+          <Text style={styles.backToLoginText}>
+            Remembered your password?{' '}
+            <Link href="/(auth)/login" style={styles.backToLoginLink}>Log in</Link>
+          </Text>
+        </View>
+      );
+    }
+    
     
