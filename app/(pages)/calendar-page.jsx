@@ -45,3 +45,52 @@ export default function CalendarPage() {
       </View>
   );
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff9f2',
+    },
+    header: {
+      padding: 16,
+      backgroundColor: '#fff9f2',
+      borderBottomWidth: 1,
+      borderBottomColor: '#e0e0e0',
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+    },
+    content: {
+      padding: 16,
+    },
+    addTaskContainer: {
+      alignItems: 'center',
+      marginTop: 20,
+    },
+    addTaskText: {
+      fontSize: 16,
+      color: '#757575',
+    },
+    addButton: {
+      backgroundColor: 'blue',
+      borderRadius: 50,
+      padding: 16,
+      position: 'absolute',
+      bottom: 30,
+      right: 20,
+    },
+    bottomNav: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      paddingVertical: 16,
+      backgroundColor: '#fff9f2',
+      borderTopWidth: 1,
+      borderTopColor: '#e0e0e0',
+    },
+    navItem: {
+      alignItems: 'center',
+    },
+  });
+  
