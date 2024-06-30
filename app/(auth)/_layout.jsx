@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 import { FA5Style } from '@expo/vector-icons/build/FontAwesome5';
 
 const AuthLayout = () => {
-  reuturn (
+  return (
     <>
       <Stack>
         <Stack.Screen
