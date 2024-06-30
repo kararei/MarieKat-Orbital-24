@@ -17,17 +17,17 @@ export default function CalendarPage() {
             setSelectedDate(day.dateString);
           }}
           markedDates={{
-            [selectedDate]: { selected: true, marked: true, selectedColor: 'blue' },
+            [selectedDate]: { selected: true, marked: true, selectedColor: 'darkred' },
           }}
         />
 
         <View style={styles.addTaskContainer}>
-          <Text style={styles.addTaskText}>Click "+" to create a new task.</Text>
+          <Text style={styles.addTaskText}>Click "+" to add a new task.</Text>
+        </View>
+      </ScrollView>
           <TouchableOpacity style={styles.addButton}>
             <Ionicons name="add" size={24} color="white" />
           </TouchableOpacity>
-        </View>
-      </ScrollView>
         <View style={styles.bottomNav}>
             <TouchableOpacity style={styles.navItem}>
             <Ionicons name="home" size={24} color="black" />
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     },
     addTaskContainer: {
       alignItems: 'center',
-      marginTop: 20,
+      marginTop: 50,
     },
     addTaskText: {
       fontSize: 16,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
       borderRadius: 50,
       padding: 16,
       position: 'absolute',
-      bottom: 30,
+      bottom: 80,
       right: 20,
     },
     bottomNav: {
