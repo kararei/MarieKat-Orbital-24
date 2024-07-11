@@ -1,22 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
-import { Link } from "expo-router";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomePage from "./(pages)/home";
+import CalendarPage from "./(pages)/calendar-page";
+import Login from './(auth)/log-in';
+import SignUp from "./(auth)/sign-up";
+import ForgetPassword from "./(auth)/forget-pw";
+import PersonalProfileFeature from "./(auth)/personalprofile-feature";
+import PetProfileFeature from "./(auth)/petprofile-feature";
+import ForumPage from "./(pages)/forum";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text>MarieKat</Text>
-      <StatusBar style="auto" />
-      <Link href="/(auth)/log-in" style={{ color: 'orange' }}>Login</Link>
-      <Link href="/(auth)/sign-up" style={{ color: 'orange' }}>Signup</Link>
-      <Link href="/(auth)/forget-pw" style={{ color: 'orange'}}>Forget password</Link>
-
-      <Link href="/(auth)/personalprofile-feature" style={{ color: 'orange'}}>Profile</Link>
-      <Link href="/(auth)/petprofile-feature" style={{ color: 'orange'}}>Pet profile</Link>
-
-      <Link href="/(pages)/home" style={{ color: 'blue'}}>Home</Link>
-      <Link href="/(pages)/calendar-page" style={{ color: 'blue'}}>Calendar page</Link>
-      <Link href="/(pages)/forum" style={{ color: 'blue'}}>Forum</Link>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={HomePage} />
+        <Stack.Screen name="Calendar" component={CalendarPage} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+        <Stack.Screen name="PersonalProfileFeature" component={PersonalProfileFeature} />
+        <Stack.Screen name="PetProfileFeature" component={PetProfileFeature} />
+        <Stack.Screen name="Forum" component={ForumPage} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

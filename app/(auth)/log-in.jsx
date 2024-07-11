@@ -5,15 +5,22 @@ import { Link } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, db, firebaseConfig } from '../firebase';
+import { useNavigation } from '@react-navigation/native';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function Login() {
+  const firebaseApp = initializeApp(firebaseConfig);
+  const db = getFirestore(firebaseApp);
+  const navigation = useNavigation(); 
+
   const [fontsLoaded] = useFonts({
     'Poppins-SemiBold': require('../../assets/fonts/Poppins-SemiBold.ttf'),
     'Poppins-Regular': require('../../assets/fonts/Poppins-Regular.ttf'),
   });
 
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   if (!fontsLoaded) {
@@ -22,13 +29,28 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // Query Firestore to get the user document with the given username
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where("username", "==", username));
+      const querySnapshot = await getDocs(q);
+  
+      if (querySnapshot.empty) {
+        Alert.alert('Error', 'User not found');
+        return;
+      }
+  
+      const userDoc = querySnapshot.docs[0];
+      const userData = userDoc.data();
+  
+      // Now use the email from the user document to sign in
+      const userCredential = await signInWithEmailAndPassword(auth, userData.email, password);
       const user = userCredential.user;
       Alert.alert('User logged in successfully');
       console.log('User logged in:', user);
+      navigation.navigate('Home');
     } catch (error) {
       const errorMessage = error.message;
-      Alert.alert('Error:', errorMessage);
+      Alert.alert('Error!', errorMessage);
     }
   };
 
@@ -70,9 +92,9 @@ export default function Login() {
         <View style={styles.inputWrapper}>
           <FontAwesome name="user" size={24} color="gray" />
           <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
             style={styles.input}
           />
         </View>

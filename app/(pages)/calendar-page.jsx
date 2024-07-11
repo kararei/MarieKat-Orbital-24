@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CalendarPage() {
+  const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState('');
 
   return (
@@ -29,7 +31,10 @@ export default function CalendarPage() {
             <Ionicons name="add" size={24} color="white" />
           </TouchableOpacity>
         <View style={styles.bottomNav}>
-            <TouchableOpacity style={styles.navItem}>
+            <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => navigation.navigate('Home')} 
+            >
             <Ionicons name="home" size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.navItem}>
@@ -38,7 +43,8 @@ export default function CalendarPage() {
             <TouchableOpacity style={styles.navItem}>
             <Ionicons name="settings" size={24} color="black" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.navItem}>
+            <TouchableOpacity style={styles.navItem}
+            onPress={() => navigation.navigate('Profile')}>
             <Ionicons name="person" size={24} color="black" />
             </TouchableOpacity>
         </View>

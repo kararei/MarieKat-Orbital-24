@@ -5,7 +5,7 @@ import { Link } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
 export default function SignUp() {
@@ -28,18 +28,29 @@ export default function SignUp() {
       Alert.alert('Passwords do not match');
       return;
     }
-
+  
     try {
+      // Check if username already exists
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where("username", "==", username));
+      const querySnapshot = await getDocs(q);
+  
+      if (!querySnapshot.empty) {
+        Alert.alert('Username already exists', 'Please choose a different username');
+        return;
+      }
+  
+      // If username is unique, proceed with user creation
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
       // Save user data to Firestore
       await setDoc(doc(db, 'users', user.uid), {
         username: username,
         email: email,
         uid: user.uid,
       });
-
+  
       Alert.alert('User registered successfully');
       console.log('User registered:', user);
     } catch (error) {
