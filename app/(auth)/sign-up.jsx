@@ -156,7 +156,7 @@ export default function SignUp() {
       </View>
 
       <Text style={styles.loginText}>
-        Don't have an account?{' '}
+        Have an account?{' '}
         <Link href="/(auth)/log-in" style={styles.loginLink}>Log in</Link>
       </Text>
     </View>
