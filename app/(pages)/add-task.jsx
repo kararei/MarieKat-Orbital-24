@@ -7,10 +7,18 @@ const AddTask = ({ navigation }) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleAddTask = async () => {
+
+    if (!title || !date || !time) {
+        Alert.alert('Error', 'Please fill in all required fields (title, date, and time).');
+        return;
+      }
+
     const user = auth.currentUser;
     if (user) {
+      setLoading(true);
       const task = {
         title,
         description,
@@ -18,10 +26,18 @@ const AddTask = ({ navigation }) => {
         time,
         userId: user.uid,
       };
-      await db.collection('tasks').add(task);
-      navigation.goBack();
+
+      try {
+        await addDoc(collection(db, 'tasks'), task);
+        setLoading(false);
+        Alert.alert('Success', 'Task added successfully');
+        navigation.goBack();
+      } catch (error) {
+        setLoading(false);
+        Alert.alert('Error', 'Something went wrong. Please try again.');
+      }
     } else {
-      alert('User not signed in');
+      Alert.alert('Error', 'User not signed in');
     }
   };
 
@@ -39,7 +55,11 @@ const AddTask = ({ navigation }) => {
       <Text style={styles.label}>Time</Text>
       <TextInput style={styles.input} value={time} onChangeText={setTime} placeholder="HH:MM" />
 
-      <Button title="Add Task" onPress={handleAddTask} />
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <Button title="Add Task" onPress={handleAddTask} />
+      )}
     </View>
   );
 };

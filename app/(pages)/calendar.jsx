@@ -1,18 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { db, auth } from '../firebase';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 
 
 
 export default function CalendarPage() {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState('');
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const q = query(collection(db, 'tasks'), where('userId', '==', user.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const tasksData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTasks(tasksData);
+      });
+      return unsubscribe;
+    }
+  }, []);
+
+  const handleDayPress = (day) => {
+    setSelectedDate(day.dateString);
+  };
+
 
   const handleAddTask = () => {
-    navigation.navigate('AddTask'); // Navigate to AddTask page
+    navigation.navigate('AddTask');
   };
+
+  const markedDates = tasks.reduce((acc, task) => {
+    acc[task.date] = { marked: true, dotColor: 'darkred' };
+    return acc;
+  }, {});
+
+  if (selectedDate) {
+    markedDates[selectedDate] = { ...markedDates[selectedDate], selected: true, selectedColor: 'darkred' };
+  }
 
   return (
     <View style={styles.container}>
@@ -21,12 +53,8 @@ export default function CalendarPage() {
       </View>
       <ScrollView contentContainerStyle={styles.content}>
         <Calendar
-          onDayPress={(day) => {
-            setSelectedDate(day.dateString);
-          }}
-          markedDates={{
-            [selectedDate]: { selected: true, marked: true, selectedColor: 'darkred' },
-          }}
+          onDayPress={handleDayPress}
+          markedDates={markedDates}
         />
 
         <View style={styles.addTaskContainer}>
@@ -85,7 +113,7 @@ const styles = StyleSheet.create({
       color: '#757575',
     },
     addButton: {
-      backgroundColor: 'blue',
+      backgroundColor: 'darkred',
       borderRadius: 50,
       padding: 16,
       position: 'absolute',
