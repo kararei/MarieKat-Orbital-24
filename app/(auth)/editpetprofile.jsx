@@ -1,36 +1,47 @@
-import { db, collection, addDoc } from 'firebase/firestore';
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { db, auth } from '../firebase';
+import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function CreatePetProfile() {
+export default function EditPetProfile({ route, navigation }) {
+  const { petId } = route.params;
+  const userId = auth.currentUser.uid;
   const [name, setName] = useState('');
   const [petType, setPetType] = useState('');
   const [age, setAge] = useState('');
   const [bio, setBio] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
   const [image, setImage] = useState(null);
+  const [gender, setGender] = useState('');
 
-  const handleEnter = async () => {
-    const petProfileData = { name, petType, age, bio, socialMedia, image };
+  useEffect(() => {
+    const fetchPetData = async () => {
+      try {
+        const petDoc = await getDoc(doc(db, 'users', userId, 'pets', petId)); 
+        if (petDoc.exists()) {
+          const { name, petType, age, bio, socialMedia, image, gender } = petDoc.data();
+          setName(name);
+          setPetType(petType);
+          setAge(age);
+          setBio(bio);
+          setSocialMedia(socialMedia);
+          setImage(image);
+          setGender(gender);
+        } else {
+          Alert.alert('Error', 'Pet not found.');
+        }
+      } catch (error) {
+        console.error('Error fetching pet data:', error);
+      }
+    };
 
-    try {
-      const docRef = await addDoc(collection(db, 'pets'), petProfileData);
-      console.log("Pet profile document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding pet profile document: ", e);
-    }
-  };
+    fetchPetData();
+  }, [petId]);
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
-      return;
-    }
-
+  const handleImagePicker = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -43,17 +54,29 @@ export default function CreatePetProfile() {
     }
   };
 
+  const handleUpdate = async () => {
+    const petRef = doc(db, 'pets', petId);
+    const updatedPetData = { name, petType, age, bio, socialMedia, image, gender };
+
+    try {
+      await setDoc(petRef, updatedPetData, { merge: true });
+      Alert.alert('Success', 'Pet profile updated successfully');
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error updating pet profile:', error);
+      Alert.alert('Error', 'Failed to update pet profile');
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.imagePlaceholder} onPress={pickImage}>
+      <TouchableOpacity onPress={handleImagePicker} style={styles.imagePicker}>
         {image ? (
-          <Image source={{ uri: image }} style={styles.previewImage} />
+          <Image source={{ uri: image }} style={styles.image} />
         ) : (
-          <Text style={styles.imagePlaceholderText}>Add Pet Image</Text>
+          <FontAwesome name="camera" size={24} color="gray" />
         )}
       </TouchableOpacity>
-      <Text style={styles.title}>Create Pet Profile</Text>
-      <StatusBar style="auto" />
 
       <View style={styles.inputContainer}>
         <View style={styles.inputWrapper}>
@@ -65,6 +88,7 @@ export default function CreatePetProfile() {
             style={styles.input}
           />
         </View>
+        {/* Gender section removed */}
         <View style={styles.inputWrapper}>
           <FontAwesome name="paw" size={24} color="gray" />
           <TextInput
@@ -102,8 +126,8 @@ export default function CreatePetProfile() {
             style={styles.input}
           />
         </View>
-        <TouchableOpacity style={styles.enterButton} onPress={handleEnter}>
-          <Text style={styles.enterButtonText}>Enter</Text>
+        <TouchableOpacity style={styles.enterButton} onPress={handleUpdate}>
+          <Text style={styles.enterButtonText}>Update</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -116,30 +140,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
+    backgroundColor: '#fff9f2',
   },
-  imagePlaceholder: {
-    width: 100,
-    height: 100,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 10,
+  imagePicker: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    backgroundColor: '#e0e0e0',
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    marginBottom: 24,
   },
-  imagePlaceholderText: {
-    color: '#757575',
-    fontFamily: 'Poppins-Regular',
-    textAlign: 'center',
-  },
-  previewImage: {
+  image: {
     width: '100%',
     height: '100%',
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 32,
-    fontFamily: 'Poppins-SemiBold',
-    marginBottom: 24,
+    borderRadius: 48,
   },
   inputContainer: {
     width: '100%',
