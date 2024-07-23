@@ -10,6 +10,10 @@ export default function CalendarPage() {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState('');
 
+  const handleAddTask = () => {
+    navigation.navigate('AddTask'); // Navigate to AddTask page
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -29,7 +33,7 @@ export default function CalendarPage() {
           <Text style={styles.addTaskText}>Click "+" to add a new task.</Text>
         </View>
       </ScrollView>
-          <TouchableOpacity style={styles.addButton}>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddTask}>
             <Ionicons name="add" size={24} color="white" />
           </TouchableOpacity>
         <View style={styles.bottomNav}>
