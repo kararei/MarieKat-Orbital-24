@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomePage from "./(pages)/home";
-import CalendarPage from "./(pages)/calendar-page";
+import CalendarPage from "./(pages)/calendar";
 import Login from './(auth)/log-in';
 import SignUp from "./(auth)/sign-up";
 import ForgetPassword from "./(auth)/forget-pw";
