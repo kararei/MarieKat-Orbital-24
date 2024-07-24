@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Switch, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Switch, Alert, ActivityIndicator, StyleSheet } from 'react-native';
 import { db, auth } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -64,9 +64,8 @@ const AddTask = ({ navigation }) => {
           mode="date"
           display="default"
           onChange={(event, selectedDate) => {
-            const currentDate = selectedDate || date;
             setShowDatePicker(false);
-            setDate(currentDate);
+            if (selectedDate) setDate(selectedDate);
           }}
         />
       )}
@@ -88,9 +87,8 @@ const AddTask = ({ navigation }) => {
               mode="time"
               display="default"
               onChange={(event, selectedTime) => {
-                const currentTime = selectedTime || time;
                 setShowTimePicker(false);
-                setTime(currentTime);
+                if (selectedTime) setTime(selectedTime);
               }}
             />
           )}
