@@ -47,10 +47,6 @@ export default function Home() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>MarieKat</Text>
-        <TouchableOpacity style={styles.swapPetButton}>
-          <Text style={styles.swapPetText}>swap pet</Text>
-          <Ionicons name="caret-down" size={16} color="black" />
-        </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -131,18 +127,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontFamily: 'Poppins-SemiBold',
-  },
-  swapPetButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff9f2',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  swapPetText: {
-    color: 'black',
-    fontFamily: 'Poppins-SemiBold',
-    marginRight: 4,
   },
   content: {
     padding: 16,

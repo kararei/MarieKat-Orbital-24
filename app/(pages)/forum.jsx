@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { db, auth } from '../firebase'; // Import your Firebase Firestore and Auth instances
-import { collection, doc, getDoc, addDoc, onSnapshot } from 'firebase/firestore'; // Import Firestore methods
+import { db, auth } from '../firebase'; 
+import { collection, doc, getDoc, addDoc, onSnapshot, updateDoc } from 'firebase/firestore'; 
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function ForumPage({ navigation }) {
+export default function ForumPage() {
   const [posts, setPosts] = useState([]);
   const [postText, setPostText] = useState('');
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState({});
   const [inputUsername, setInputUsername] = useState('');
   const [image, setImage] = useState(null);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getUsername = async () => {
@@ -45,6 +47,7 @@ export default function ForumPage({ navigation }) {
       const newPost = {
         text: postText.trim(),
         username: inputUsername.trim(),
+        userId: auth.currentUser?.uid, 
         image: image || null,
         comments: [],
         createdAt: new Date().toISOString(),
@@ -56,10 +59,11 @@ export default function ForumPage({ navigation }) {
   };
 
   const addComment = async (postId) => {
-    if (commentText.trim() && inputUsername.trim()) {
+    if (commentText[postId]?.trim() && inputUsername.trim()) {
       const newComment = {
-        text: commentText.trim(),
+        text: commentText[postId].trim(),
         username: inputUsername.trim(),
+        userId: auth.currentUser?.uid, 
         createdAt: new Date().toISOString(),
       };
 
@@ -69,8 +73,8 @@ export default function ForumPage({ navigation }) {
       if (postDoc.exists()) {
         const postData = postDoc.data();
         const updatedComments = [...postData.comments, newComment];
-        await postDocRef.update({ comments: updatedComments });
-        setCommentText('');
+        await updateDoc(postDocRef, { comments: updatedComments });
+        setCommentText(prevState => ({ ...prevState, [postId]: '' }));
       }
     }
   };
@@ -88,6 +92,10 @@ export default function ForumPage({ navigation }) {
     }
   };
 
+  const navigateToProfile = (userId) => {
+    navigation.navigate('otherProfile', { userId });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -97,7 +105,9 @@ export default function ForumPage({ navigation }) {
         <Text style={styles.title}>Forum</Text>
       </View>
       <View style={styles.newPostContainer}>
-        <Text style={styles.username}>{inputUsername}</Text>
+        <TouchableOpacity onPress={() => navigateToProfile(auth.currentUser?.uid)}>
+          <Text style={styles.username}>{inputUsername}</Text>
+        </TouchableOpacity>
         <TextInput
           style={[styles.input, styles.postTextInput]}
           placeholder="What's on your mind?"
@@ -119,7 +129,9 @@ export default function ForumPage({ navigation }) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.postContainer}>
-            <Text style={styles.username}>{item.username}</Text>
+            <TouchableOpacity onPress={() => navigateToProfile(item.userId)}>
+              <Text style={styles.username}>{item.username}</Text>
+            </TouchableOpacity>
             <Text style={styles.postText}>{item.text}</Text>
             {item.image && <Image source={{ uri: item.image }} style={styles.postImage} />}
             <FlatList
@@ -127,7 +139,9 @@ export default function ForumPage({ navigation }) {
               keyExtractor={(comment, index) => `${item.id}-${index}`}
               renderItem={({ item: comment }) => (
                 <View style={styles.commentContainer}>
-                  <Text style={styles.commentUsername}>{comment.username}</Text>
+                  <TouchableOpacity onPress={() => navigateToProfile(comment.userId)}>
+                    <Text style={styles.commentUsername}>{comment.username}</Text>
+                  </TouchableOpacity>
                   <Text style={styles.commentText}>{comment.text}</Text>
                 </View>
               )}
@@ -136,8 +150,8 @@ export default function ForumPage({ navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder="Add a comment..."
-                value={commentText}
-                onChangeText={setCommentText}
+                value={commentText[item.id] || ''}
+                onChangeText={(text) => setCommentText(prevState => ({ ...prevState, [item.id]: text }))}
               />
               <TouchableOpacity style={styles.commentButton} onPress={() => addComment(item.id)}>
                 <Ionicons name="send" size={20} color="white" />
