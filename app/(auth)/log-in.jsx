@@ -4,7 +4,7 @@ import { Text, View, TextInput, TouchableOpacity, Image, StyleSheet, Alert } fro
 import { Link } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, db, firebaseConfig } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
 import { initializeApp } from 'firebase/app';
@@ -13,7 +13,7 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 export default function Login() {
   const firebaseApp = initializeApp(firebaseConfig);
   const db = getFirestore(firebaseApp);
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
   const [fontsLoaded] = useFonts({
     'Poppins-SemiBold': require('../../assets/fonts/Poppins-SemiBold.ttf'),
@@ -29,20 +29,18 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      // Query Firestore to get the user document with the given username
       const usersRef = collection(db, 'users');
       const q = query(usersRef, where("username", "==", username));
       const querySnapshot = await getDocs(q);
-  
+
       if (querySnapshot.empty) {
         Alert.alert('Error', 'User not found');
         return;
       }
-  
+
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
-  
-      // Now use the email from the user document to sign in
+
       const userCredential = await signInWithEmailAndPassword(auth, userData.email, password);
       const user = userCredential.user;
       Alert.alert('User logged in successfully');
@@ -67,19 +65,8 @@ export default function Login() {
     }
   };
 
-  const handlePasswordReset = async () => {
-    if (!email) {
-      Alert.alert('Please enter your email to reset password');
-      return;
-    }
-
-    try {
-      await sendPasswordResetEmail(auth, email);
-      Alert.alert('Password reset email sent');
-    } catch (error) {
-      const errorMessage = error.message;
-      Alert.alert('Error:', errorMessage);
-    }
+  const handlePasswordReset = () => {
+    navigation.navigate('ForgetPassword');
   };
 
   return (
@@ -142,6 +129,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#fff9f2',
+    padding: 16, // Added padding to ensure proper spacing
   },
   logo: {
     width: 96,
@@ -152,6 +141,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'Poppins-SemiBold',
     marginBottom: 24,
+    color: 'black',
   },
   inputContainer: {
     width: '100%',
@@ -161,15 +151,17 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#f8d2e2', // Match input background color
     borderRadius: 50,
-    padding: 12,
+    paddingVertical: 12, // Adjust padding to match the forget password page
+    paddingHorizontal: 16,
     marginBottom: 16,
   },
   input: {
     flex: 1,
     marginLeft: 8,
     fontFamily: 'Poppins-Regular',
+    fontSize: 16, // Ensure the font size matches
   },
   eyeIcon: {
     padding: 8,
@@ -178,11 +170,12 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     color: '#757575',
     marginBottom: 16,
+    fontFamily: 'Poppins-Regular',
   },
   loginButton: {
     backgroundColor: '#800000',
     borderRadius: 50,
-    paddingVertical: 12,
+    paddingVertical: 16, // Adjust padding to match the forget password page
     marginBottom: 16,
   },
   loginButtonText: {
@@ -190,6 +183,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontFamily: 'Poppins-SemiBold',
+    fontSize: 16, // Ensure the font size matches
   },
   separatorContainer: {
     flexDirection: 'row',
@@ -204,6 +198,7 @@ const styles = StyleSheet.create({
   separatorText: {
     marginHorizontal: 8,
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
   },
   googleButton: {
     flexDirection: 'row',
@@ -213,7 +208,7 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
     borderWidth: 1,
     borderRadius: 50,
-    paddingVertical: 12,
+    paddingVertical: 16, // Adjust padding to match the forget password page
     marginBottom: 16,
   },
   googleIcon: {
@@ -221,11 +216,15 @@ const styles = StyleSheet.create({
   },
   googleButtonText: {
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16, // Ensure the font size matches
   },
   signupText: {
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
   },
   signupLink: {
     color: '#ff8c00',
+    fontFamily: 'Poppins-SemiBold',
   },
 });

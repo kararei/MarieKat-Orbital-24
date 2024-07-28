@@ -1,14 +1,14 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomePage from "./(pages)/home";
-import CalendarPage from "./(pages)/calendar";
+import HomePage from './(pages)/home';
+import CalendarPage from './(pages)/calendar';
 import Login from './(auth)/log-in';
-import SignUp from "./(auth)/sign-up";
-import ForgetPassword from "./(auth)/forget-pw";
-import PersonalProfileFeature from "./(auth)/personalprofile-feature";
-import PetProfileFeature from "./(auth)/petprofile-feature";
-import ForumPage from "./(pages)/forum";
+import SignUp from './(auth)/sign-up';
+import ForgetPassword from './(auth)/forget-pw';
+import PersonalProfileFeature from './(auth)/personalprofile-feature';
+import PetProfileFeature from './(auth)/petprofile-feature';
+import ForumPage from './(pages)/forum';
 import AddTask from './(pages)/add-task';
 
 const Stack = createStackNavigator();
