@@ -29,7 +29,6 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      // Query Firestore to get the user document with the given username
       const usersRef = collection(db, 'users');
       const q = query(usersRef, where("username", "==", username));
       const querySnapshot = await getDocs(q);
@@ -42,7 +41,6 @@ export default function Login() {
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
   
-      // Now use the email from the user document to sign in
       const userCredential = await signInWithEmailAndPassword(auth, userData.email, password);
       const user = userCredential.user;
       Alert.alert('User logged in successfully');
@@ -142,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#fff9f2',
   },
   logo: {
     width: 96,
@@ -152,6 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'Poppins-SemiBold',
     marginBottom: 24,
+    color: 'black',
   },
   inputContainer: {
     width: '100%',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#f8d2e2',
     borderRadius: 50,
     padding: 12,
     marginBottom: 16,
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     fontFamily: 'Poppins-Regular',
+    color: 'black',
   },
   eyeIcon: {
     padding: 8,
@@ -178,6 +179,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     color: '#757575',
     marginBottom: 16,
+    fontFamily: 'Poppins-Regular',
   },
   loginButton: {
     backgroundColor: '#800000',
@@ -204,6 +206,7 @@ const styles = StyleSheet.create({
   separatorText: {
     marginHorizontal: 8,
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
   },
   googleButton: {
     flexDirection: 'row',
@@ -221,11 +224,14 @@ const styles = StyleSheet.create({
   },
   googleButtonText: {
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
   },
   signupText: {
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
   },
   signupLink: {
     color: '#ff8c00',
+    fontFamily: 'Poppins-SemiBold',
   },
 });
