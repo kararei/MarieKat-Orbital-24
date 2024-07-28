@@ -1,46 +1,60 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { db, auth } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDzZEvYjyr3jA4eAoz2UCyG0xAYIt3o0fw",
-  authDomain: "mariekat-a7cbd.firebaseapp.com",
-  projectId: "mariekat-a7cbd",
-  storageBucket: "mariekat-a7cbd.appspot.com",
-  messagingSenderId: "956490826711",
-  appId: "1:956490826711:web:deb1d1e869934e20a64192",
-  measurementId: "G-L3YMD3WLND"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-  
-export default function CreateProfile() {
+export default function CreateProfile({ route }) {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [cityCountry, setCityCountry] = useState('');
   const [bio, setBio] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
-  
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      // Get the current user ID
+      const user = auth.currentUser;
+      if (user) {
+        setUserId(user.uid);
+        const docRef = doc(db, 'profile', user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const profileData = docSnap.data();
+          setName(profileData.name || '');
+          setAge(profileData.age || '');
+          setCityCountry(profileData.cityCountry || '');
+          setBio(profileData.bio || '');
+          setSocialMedia(profileData.socialMedia || '');
+        }
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const handleEnter = async () => {
-    const profileData = { name, age, cityCountry, bio, socialMedia };
-    
-    try {
-      const docRef = await addDoc(collection(db, 'users'), profileData);
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
+    if (userId) {
+      const profileData = { name, age, cityCountry, bio, socialMedia };
+
+      try {
+        // Update the existing profile
+        const docRef = doc(db, 'profile', userId);
+        await setDoc(docRef, profileData, { merge: true });
+        console.log("Profile updated with ID: ", userId);
+      } catch (e) {
+        console.error("Error updating profile: ", e);
+      }
     }
   };
 
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
-      <Text style={styles.title}>Create New Profile</Text>
+      <Text style={styles.title}>{userId ? 'Edit Profile' : 'Create New Profile'}</Text>
       <StatusBar style="auto" />
 
       <View style={styles.inputContainer}>
@@ -91,7 +105,7 @@ export default function CreateProfile() {
           />
         </View>
         <TouchableOpacity style={styles.enterButton} onPress={handleEnter}>
-          <Text style={styles.enterButtonText}>Enter</Text>
+          <Text style={styles.enterButtonText}>{userId ? 'Edit Profile' : 'Create Profile'}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -104,6 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
+    backgroundColor: '#fff9f2',
   },
   logo: {
     width: 96,
