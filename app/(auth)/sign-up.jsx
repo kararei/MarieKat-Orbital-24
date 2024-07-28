@@ -30,7 +30,6 @@ export default function SignUp() {
     }
   
     try {
-      // Check if username already exists
       const usersRef = collection(db, 'users');
       const q = query(usersRef, where("username", "==", username));
       const querySnapshot = await getDocs(q);
@@ -40,11 +39,10 @@ export default function SignUp() {
         return;
       }
   
-      // If username is unique, proceed with user creation
+      //unique username check
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
   
-      // Save user data to Firestore
       await setDoc(doc(db, 'users', user.uid), {
         username: username,
         email: email,
@@ -168,6 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#fff9f2', // Match the background color of the home page
   },
   logo: {
     width: 96,
@@ -178,6 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'Poppins-SemiBold',
     marginBottom: 24,
+    color: 'black',
   },
   inputContainer: {
     width: '100%',
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#f8d2e2', // Match the input background color with home page sections
     borderRadius: 50,
     padding: 12,
     marginBottom: 16,
@@ -196,12 +196,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     fontFamily: 'Poppins-Regular',
+    color: 'black',
   },
   eyeIcon: {
     padding: 8,
   },
   signUpButton: {
-    backgroundColor: '#800000',
+    backgroundColor: '#800000', // Match the button color
     borderRadius: 50,
     paddingVertical: 12,
     marginBottom: 16,
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Poppins-SemiBold',
   },
   separatorContainer: {
     flexDirection: 'row',
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
   separatorText: {
     marginHorizontal: 8,
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
   },
   googleButton: {
     flexDirection: 'row',
@@ -242,11 +244,14 @@ const styles = StyleSheet.create({
   },
   googleButtonText: {
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
   },
   loginText: {
     color: '#757575',
+    fontFamily: 'Poppins-Regular',
   },
   loginLink: {
     color: '#ff8c00',
+    fontFamily: 'Poppins-SemiBold',
   },
 });
