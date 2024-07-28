@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { db, auth } from '../firebase';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import moment from 'moment';
 
 export default function Home() {
   const navigation = useNavigation();
@@ -10,6 +13,31 @@ export default function Home() {
     'Poppins-SemiBold': require('../../assets/fonts/Poppins-SemiBold.ttf'),
     'Poppins-Regular': require('../../assets/fonts/Poppins-Regular.ttf'),
   });
+  const [tasks, setTasks] = useState([]);
+  const [nextEvents, setNextEvents] = useState([]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const q = query(collection(db, 'tasks'), where('userId', '==', user.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const tasksData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTasks(tasksData);
+      });
+      return unsubscribe;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (tasks.length > 0) {
+      const sortedTasks = tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+      const upcomingTasks = sortedTasks.slice(0, 5);
+      setNextEvents(upcomingTasks);
+    }
+  }, [tasks]);
 
   if (!fontsLoaded) {
     return null; // or a loading spinner or something
@@ -35,7 +63,18 @@ export default function Home() {
             <Ionicons name="chevron-forward" size={24} color="black" />
           </TouchableOpacity>
           <View style={styles.sectionContent}>
-            <Text style={styles.placeholderText}>No upcoming events scheduled.</Text>
+            {nextEvents.length > 0 ? (
+              nextEvents.map((event) => (
+                <View key={event.id} style={styles.taskItem}>
+                  <Text style={styles.taskTitle}>{event.title}</Text>
+                  <Text>{event.description}</Text>
+                  <Text>{moment(event.date).format('MMMM Do, YYYY')}</Text>
+                  {!event.allDay && <Text>{event.time}</Text>}
+                </View>
+              ))
+            ) : (
+              <Text style={styles.placeholderText}>No upcoming events scheduled.</Text>
+            )}
           </View>
         </View>
 
@@ -129,6 +168,13 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff9f2',
     borderRadius: 8,
+  },
+  taskItem: {
+    marginBottom: 8,
+  },
+  taskTitle: {
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
   },
   placeholderText: {
     fontSize: 16,
