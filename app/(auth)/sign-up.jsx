@@ -13,7 +13,7 @@ export default function SignUp() {
     'Poppins-SemiBold': require('../../assets/fonts/Poppins-SemiBold.ttf'),
     'Poppins-Regular': require('../../assets/fonts/Poppins-Regular.ttf'),
   });
-  
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,27 +28,27 @@ export default function SignUp() {
       Alert.alert('Passwords do not match');
       return;
     }
-  
+
     try {
       const usersRef = collection(db, 'users');
       const q = query(usersRef, where("username", "==", username));
       const querySnapshot = await getDocs(q);
-  
+
       if (!querySnapshot.empty) {
         Alert.alert('Username already exists', 'Please choose a different username');
         return;
       }
-  
+
       //unique username check
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-  
+
       await setDoc(doc(db, 'users', user.uid), {
         username: username,
         email: email,
         uid: user.uid,
       });
-  
+
       Alert.alert('User registered successfully');
       console.log('User registered:', user);
     } catch (error) {
@@ -106,7 +106,6 @@ export default function SignUp() {
             onChangeText={setEmail}
             style={styles.input}
           />
-
         </View>
         <View style={styles.inputWrapper}>
           <FontAwesome name="lock" size={24} color="gray" />
@@ -117,7 +116,6 @@ export default function SignUp() {
             onChangeText={setPassword}
             style={styles.input}
           />
-
           <TouchableOpacity style={styles.eyeIcon}>
             <Ionicons name="eye" size={24} color="gray" />
           </TouchableOpacity>
@@ -132,7 +130,6 @@ export default function SignUp() {
             onChangeText={setConfirmPassword}
             style={styles.input}
           />
-
           <TouchableOpacity style={styles.eyeIcon}>
             <Ionicons name="eye" size={24} color="gray" />
           </TouchableOpacity>
@@ -167,11 +164,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff9f2', // Match the background color of the home page
+    paddingHorizontal: 16, // Added padding to ensure proper spacing
   },
   logo: {
     width: 96,
     height: 96,
-    marginBottom: 16,
+    marginBottom: 8, // Reduced margin to ensure it doesn't stick out
   },
   title: {
     fontSize: 32,
@@ -189,7 +187,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f8d2e2', // Match the input background color with home page sections
     borderRadius: 50,
-    padding: 12,
+    paddingVertical: 12, // Adjust padding to match the forget password page
+    paddingHorizontal: 16,
     marginBottom: 16,
   },
   input: {
@@ -197,6 +196,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontFamily: 'Poppins-Regular',
     color: 'black',
+    fontSize: 16, // Ensure the font size matches
   },
   eyeIcon: {
     padding: 8,
@@ -204,19 +204,23 @@ const styles = StyleSheet.create({
   signUpButton: {
     backgroundColor: '#800000', // Match the button color
     borderRadius: 50,
-    paddingVertical: 12,
-    marginBottom: 16,
+    paddingVertical: 12, // Adjust padding to match the forget password page
+    width: '100%', // Ensure button doesn't stick out
+    alignSelf: 'center', // Center the button
+    maxWidth: 400, // Ensure max width consistency
+    marginBottom: 8,
   },
   signUpButtonText: {
     color: '#fff',
     textAlign: 'center',
     fontWeight: 'bold',
     fontFamily: 'Poppins-SemiBold',
+    fontSize: 16, // Ensure the font size matches
   },
   separatorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: 12,
   },
   separatorLine: {
     flex: 1,
@@ -236,7 +240,10 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
     borderWidth: 1,
     borderRadius: 50,
-    paddingVertical: 12,
+    paddingVertical: 12, // Adjust padding to match the forget password page
+    width: '100%', // Ensure button doesn't stick out
+    alignSelf: 'center', // Center the button
+    maxWidth: 400, // Ensure max width consistency
     marginBottom: 16,
   },
   googleIcon: {
@@ -245,6 +252,7 @@ const styles = StyleSheet.create({
   googleButtonText: {
     color: '#757575',
     fontFamily: 'Poppins-Regular',
+    fontSize: 16, // Ensure the font size matches
   },
   loginText: {
     color: '#757575',

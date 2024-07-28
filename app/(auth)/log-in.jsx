@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff9f2',
+    padding: 16, // Added padding to ensure proper spacing
   },
   logo: {
     width: 96,
@@ -150,16 +151,17 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f8d2e2',
+    backgroundColor: '#f8d2e2', // Match input background color
     borderRadius: 50,
-    padding: 12,
+    paddingVertical: 12, // Adjust padding to match the forget password page
+    paddingHorizontal: 16,
     marginBottom: 16,
   },
   input: {
     flex: 1,
     marginLeft: 8,
     fontFamily: 'Poppins-Regular',
-    color: 'black',
+    fontSize: 16, // Ensure the font size matches
   },
   eyeIcon: {
     padding: 8,
@@ -173,7 +175,7 @@ const styles = StyleSheet.create({
   loginButton: {
     backgroundColor: '#800000',
     borderRadius: 50,
-    paddingVertical: 12,
+    paddingVertical: 16, // Adjust padding to match the forget password page
     marginBottom: 16,
   },
   loginButtonText: {
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontFamily: 'Poppins-SemiBold',
+    fontSize: 16, // Ensure the font size matches
   },
   separatorContainer: {
     flexDirection: 'row',
@@ -205,7 +208,7 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
     borderWidth: 1,
     borderRadius: 50,
-    paddingVertical: 12,
+    paddingVertical: 16, // Adjust padding to match the forget password page
     marginBottom: 16,
   },
   googleIcon: {
@@ -214,6 +217,7 @@ const styles = StyleSheet.create({
   googleButtonText: {
     color: '#757575',
     fontFamily: 'Poppins-Regular',
+    fontSize: 16, // Ensure the font size matches
   },
   signupText: {
     color: '#757575',
