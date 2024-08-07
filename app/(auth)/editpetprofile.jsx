@@ -5,8 +5,9 @@ import { StatusBar } from 'expo-status-bar';
 import { db, auth } from '../firebase';
 import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
 
-export default function EditPetProfile({ route, navigation }) {
+export default function EditPetProfile({ route }) {
   const { petId } = route.params;
   const userId = auth.currentUser.uid;
   const [name, setName] = useState('');
@@ -15,21 +16,20 @@ export default function EditPetProfile({ route, navigation }) {
   const [bio, setBio] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
   const [image, setImage] = useState(null);
-  const [gender, setGender] = useState('');
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchPetData = async () => {
       try {
         const petDoc = await getDoc(doc(db, 'users', userId, 'pets', petId)); 
         if (petDoc.exists()) {
-          const { name, petType, age, bio, socialMedia, image, gender } = petDoc.data();
+          const { name, petType, age, bio, socialMedia, image } = petDoc.data();
           setName(name);
           setPetType(petType);
           setAge(age);
           setBio(bio);
           setSocialMedia(socialMedia);
           setImage(image);
-          setGender(gender);
         } else {
           Alert.alert('Error', 'Pet not found.');
         }
@@ -55,16 +55,19 @@ export default function EditPetProfile({ route, navigation }) {
   };
 
   const handleUpdate = async () => {
-    const petRef = doc(db, 'pets', petId);
-    const updatedPetData = { name, petType, age, bio, socialMedia, image, gender };
+    const user = auth.currentUser;
+    if (user) {
+      const petRef = doc(db, 'users', user.uid, 'pets', petId);
+      const updatedPetData = { name, petType, age, bio, socialMedia, image };
 
-    try {
-      await setDoc(petRef, updatedPetData, { merge: true });
-      Alert.alert('Success', 'Pet profile updated successfully');
-      navigation.goBack();
-    } catch (error) {
-      console.error('Error updating pet profile:', error);
-      Alert.alert('Error', 'Failed to update pet profile');
+      try {
+        await setDoc(petRef, updatedPetData, { merge: true });
+        Alert.alert('Success', 'Pet profile updated successfully');
+        navigation.goBack();
+      } catch (error) {
+        console.error('Error updating pet profile:', error);
+        Alert.alert('Error', 'Failed to update pet profile');
+      }
     }
   };
 
@@ -88,7 +91,7 @@ export default function EditPetProfile({ route, navigation }) {
             style={styles.input}
           />
         </View>
-        {/* Gender section removed */}
+
         <View style={styles.inputWrapper}>
           <FontAwesome name="paw" size={24} color="gray" />
           <TextInput

@@ -9,6 +9,8 @@ export default function OtherProfilePage() {
   const { userId } = route.params;
   const [userProfile, setUserProfile] = useState(null);
   const [userPets, setUserPets] = useState([]);
+  const [isLoadingProfile, setLoadingProfile] = useState(true);
+  const [isLoadingPets, setLoadingPets] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const fetchUserProfile = useCallback(async () => {
@@ -22,6 +24,8 @@ export default function OtherProfilePage() {
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
+    } finally {
+      setLoading(false);
     }
   }, [userId]);
 
@@ -33,6 +37,8 @@ export default function OtherProfilePage() {
       setUserPets(petsList);
     } catch (error) {
       console.error('Error fetching user pets:', error);
+    } finally {
+      setLoading(false);
     }
   }, [userId]);
 
@@ -42,12 +48,6 @@ export default function OtherProfilePage() {
       fetchUserPets();
     }
   }, [userId, fetchUserProfile, fetchUserPets]);
-
-  useEffect(() => {
-    if (userProfile && userPets.length > 0) {
-      setLoading(false);
-    }
-  }, [userProfile, userPets]);
 
   if (loading) {
     return (

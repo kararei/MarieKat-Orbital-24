@@ -7,6 +7,7 @@ import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, setDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SignUp() {
   const [fontsLoaded] = useFonts({
@@ -18,6 +19,7 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigation = useNavigation();
 
   if (!fontsLoaded) {
     return null; // or a loading spinner
@@ -51,6 +53,8 @@ export default function SignUp() {
 
       Alert.alert('User registered successfully');
       console.log('User registered:', user);
+      navigation.goBack();
+
     } catch (error) {
       const errorMessage = error.message;
       Alert.alert('Error:', errorMessage);

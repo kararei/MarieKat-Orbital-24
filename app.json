@@ -24,10 +24,25 @@
       "output": "static"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f0458dc8-508a-465b-bb61-5388c1008f81"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f0458dc8-508a-465b-bb61-5388c1008f81"
     }
   }
 }

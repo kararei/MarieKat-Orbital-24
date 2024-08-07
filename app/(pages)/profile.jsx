@@ -72,7 +72,7 @@ const PersonalProfile = () => {
       </View>
 
       <TouchableOpacity style={styles.editButton}
-        onPress={() => navigation.navigate('PersonalProfile')}>
+        onPress={() => navigation.navigate('PersonalProfileFeature')}>
         <Text style={styles.editButtonText}>Edit Profile</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -135,7 +135,7 @@ const PetsProfile = () => {
       )}
 
       <TouchableOpacity style={styles.editButton}
-        onPress={() => navigation.navigate('PetProfile')}>
+        onPress={() => navigation.navigate('PetProfileFeature')}>
         <Text style={styles.editButtonText}>Add Pet</Text>
       </TouchableOpacity>
     </ScrollView>

@@ -1,9 +1,11 @@
-import { db, collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc } from 'firebase/firestore';
+import { db, auth } from '../firebase';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CreatePetProfile() {
   const [name, setName] = useState('');
@@ -12,13 +14,23 @@ export default function CreatePetProfile() {
   const [bio, setBio] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
   const [image, setImage] = useState(null);
+  const navigation = useNavigation();
 
   const handleEnter = async () => {
     const petProfileData = { name, petType, age, bio, socialMedia, image };
-
+  
     try {
-      const docRef = await addDoc(collection(db, 'pets'), petProfileData);
-      console.log("Pet profile document written with ID: ", docRef.id);
+      const user = auth.currentUser;
+      if (user) {
+        // Reference to the pets subcollection within the user document
+        const userDocRef = doc(db, 'users', user.uid);
+        const petsCollectionRef = collection(userDocRef, 'pets');
+        const docRef = await addDoc(petsCollectionRef, petProfileData);
+        console.log("Pet profile document written with ID: ", docRef.id);
+        Alert.alert('Success', 'Pet profile created successfully', [
+          { text: 'OK', onPress: () => navigation.navigate('Profile') },
+        ]);
+      }
     } catch (e) {
       console.error("Error adding pet profile document: ", e);
     }
